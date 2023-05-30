@@ -14,10 +14,20 @@ namespace SerialPort_ReadAddress
     public partial class Form2 : Form
     {
         bool notClose = true;
+        readonly int ID;
 
-        //委托更新任务列表
-        public delegate void Test_dataGridView(DataGridView dataGridView, List<TaskList> text);
-        public void Test_Text_dataGridView(DataGridView dataGridView, List<TaskList> text)
+        //委托更新任务列表TaskList
+        public delegate void Test_dataGridView_TaskList(DataGridView dataGridView, List<TaskList> text);
+        public void Test_Text_dataGridView_TaskList(DataGridView dataGridView, List<TaskList> text)
+        {
+            dataGridView.DataSource = text;
+            dataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCells;
+            //dataGridView.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCellsExceptHeader;
+        }
+
+        //委托更新任务列表ParameterList
+        public delegate void Test_dataGridView_ParameterList(DataGridView dataGridView, List<Parameter> text);
+        public void Test_Text_dataGridView_ParameterList(DataGridView dataGridView, List<Parameter> text)
         {
             dataGridView.DataSource = text;
             dataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCells;
@@ -31,9 +41,10 @@ namespace SerialPort_ReadAddress
             dataGridView.Rows.Clear();
         }
         
-        public Form2()
+        public Form2(int Id)
         {
             InitializeComponent();
+            ID = Id;
         }
 
         private void dataGridView1_DataError(object sender, DataGridViewDataErrorEventArgs e)
@@ -71,7 +82,7 @@ namespace SerialPort_ReadAddress
                 {
                     TaskListClass.taskList.RemoveAt(ints[i]);
                     BeginInvoke(new Test_dataGridView_Clear(Test_Clear_dataGridView), new object[] { dataGridView1 });
-                    BeginInvoke(new Test_dataGridView(Test_Text_dataGridView), new object[] { dataGridView1, TaskListClass.taskList });
+                    BeginInvoke(new Test_dataGridView_TaskList(Test_Text_dataGridView_TaskList), new object[] { dataGridView1, TaskListClass.taskList });
                     return;
                 }
             }
@@ -87,30 +98,60 @@ namespace SerialPort_ReadAddress
                 TaskListClass.taskList.RemoveAt(i);
             }
             BeginInvoke(new Test_dataGridView_Clear(Test_Clear_dataGridView), new object[] { dataGridView1 });
-            BeginInvoke(new Test_dataGridView(Test_Text_dataGridView), new object[] { dataGridView1, TaskListClass.taskList });
+            BeginInvoke(new Test_dataGridView_TaskList(Test_Text_dataGridView_TaskList), new object[] { dataGridView1, TaskListClass.taskList });
         }
 
         private void Form2_Load(object sender, EventArgs e)
         {
             notClose = true;
-            int listcount = TaskListClass.taskList.Count;
-            BeginInvoke(new Test_dataGridView_Clear(Test_Clear_dataGridView), new object[] { dataGridView1 });
-            BeginInvoke(new Test_dataGridView(Test_Text_dataGridView), new object[] { dataGridView1, TaskListClass.taskList });
-
-            //异步刷新任务列表
-            Task.Run(() =>
+            if (ID == 1)
             {
-                while (notClose)
+                dataGridView1.ContextMenuStrip = contextMenuStrip1;
+
+                int listcount = TaskListClass.taskList.Count;
+                BeginInvoke(new Test_dataGridView_Clear(Test_Clear_dataGridView), new object[] { dataGridView1 });
+                BeginInvoke(new Test_dataGridView_TaskList(Test_Text_dataGridView_TaskList), new object[] { dataGridView1, TaskListClass.taskList });
+
+                //异步刷新任务列表
+                Task.Run(() =>
                 {
-                    if (listcount != TaskListClass.taskList.Count && notClose)
+                    while (notClose)
                     {
-                        listcount = TaskListClass.taskList.Count;
-                        BeginInvoke(new Test_dataGridView_Clear(Test_Clear_dataGridView), new object[] { dataGridView1 });
-                        BeginInvoke(new Test_dataGridView(Test_Text_dataGridView), new object[] { dataGridView1, TaskListClass.taskList });
+                        if (listcount != TaskListClass.taskList.Count && notClose)
+                        {
+                            listcount = TaskListClass.taskList.Count;
+                            BeginInvoke(new Test_dataGridView_Clear(Test_Clear_dataGridView), new object[] { dataGridView1 });
+                            BeginInvoke(new Test_dataGridView_TaskList(Test_Text_dataGridView_TaskList), new object[] { dataGridView1, TaskListClass.taskList });
+                        }
                     }
+                });
+                //dataGridView1.DataSource = List;
+            }
+            else if (ID == 2)
+            {
+                int listcount = 0;
+                if (ParameterList.parameters != null)
+                {
+                    listcount = ParameterList.parameters.Count;
                 }
-            });
-            //dataGridView1.DataSource = List;
+                BeginInvoke(new Test_dataGridView_Clear(Test_Clear_dataGridView), new object[] { dataGridView1 });
+                BeginInvoke(new Test_dataGridView_ParameterList(Test_Text_dataGridView_ParameterList), new object[] { dataGridView1, ParameterList.parameters });
+
+                //异步刷新任务列表
+                Task.Run(() =>
+                {
+                    while (notClose)
+                    {
+                        if (ParameterList.parameters != null && listcount != ParameterList.parameters.Count && notClose)
+                        {
+                            listcount = ParameterList.parameters.Count;
+                            BeginInvoke(new Test_dataGridView_Clear(Test_Clear_dataGridView), new object[] { dataGridView1 });
+                            BeginInvoke(new Test_dataGridView_ParameterList(Test_Text_dataGridView_ParameterList), new object[] { dataGridView1, ParameterList.parameters });
+                        }
+                    }
+                });
+            }
+
         }
     }
 }

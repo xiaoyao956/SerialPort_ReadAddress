@@ -79,7 +79,7 @@ namespace HexAll
                 if (sp.IsOpen)
                 {
                     sp.Close();
-                    Thread.Sleep(500);
+                    Thread.Sleep(100);
                 }
 
                 //打开新的串行端口连接
@@ -117,7 +117,7 @@ namespace HexAll
         /// <returns></returns>
         public static string Port_String(string stringBuffer, string PortName, string BaudRate, string Parity, string DataBits, string StopBits)
         {
-            if (PortName == String.Empty || BaudRate == string.Empty || DataBits == string.Empty)
+            if (PortName == String.Empty || BaudRate == String.Empty || DataBits == String.Empty)
             {
                 MessageBox.Show("参数不能为空");
                 return null;
