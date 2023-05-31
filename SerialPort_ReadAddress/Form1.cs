@@ -149,7 +149,7 @@ namespace SerialPort_ReadAddress
             BeginInvoke(new Test_label(Test_Text_label), new object[] { label7, "任务数量：" + taskLists.Count });
         }
 
-        private void button2_Click(object sender, EventArgs e)
+        private void toolStripMenuItem1_Click(object sender, EventArgs e)
         {
             TaskListClass.taskList = taskLists;
             Form2 form2 = new Form2(1);
@@ -157,7 +157,7 @@ namespace SerialPort_ReadAddress
             BeginInvoke(new Test_label(Test_Text_label), new object[] { label7, "任务数量：" + TaskListClass.taskList.Count });
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        private void toolStripMenuItem2_Click(object sender, EventArgs e)
         {
             ParameterList.parameters = parameterslist;
             Form2 form2 = new Form2(2);
