@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using HexAll;
 using System.Threading;
+using System.Diagnostics;
 
 namespace SerialPort_ReadAddress
 {
@@ -44,6 +45,9 @@ namespace SerialPort_ReadAddress
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            ContextMenuStrip = contextMenuStrip1;
+            textBox2.ContextMenuStrip = contextMenuStrip1;
+
             //打开读取数据
             Text_PortName.Text = Properties.Settings.Default.PortName;
             Text_DataBits.Text = Properties.Settings.Default.DataBits;
@@ -125,9 +129,13 @@ namespace SerialPort_ReadAddress
                     {
                         //textBox2.Text += "发送命令：" + text + "\r\n";
                         BeginInvoke(new Test(Test_Text), new object[] { textBox2, "发送命令：" + text + "\r\n" });
+
+                        Stopwatch s1 = new Stopwatch();
+                        s1.Start();
                         string Readtext = Hex.Port_String(text, PortName, BaudRate, Parity, DataBits, StopBits);
+                        s1.Stop();
                         //textBox2.Text += "接收命令：" + text + "\r\n";
-                        BeginInvoke(new Test(Test_Text), new object[] { textBox2, "接收命令：" + Readtext + "\r\n" });
+                        BeginInvoke(new Test(Test_Text), new object[] { textBox2, "接收命令：" + Readtext + " 运行时间:" + s1.ElapsedMilliseconds + "毫秒" + "\r\n" });
 
                         //记录完成数据
                         Parameter parameter = new Parameter();
@@ -141,7 +149,7 @@ namespace SerialPort_ReadAddress
                         parameter.ReadPost = Readtext;
 
                         parameterslist.Add(parameter);
-                        ParameterList.parameters = parameterslist;
+                        ParameterList.Parameters = parameterslist;
                     }
                     taskLists.Remove(tasklist);
                 }
@@ -155,13 +163,14 @@ namespace SerialPort_ReadAddress
             Form2 form2 = new Form2(1);
             form2.ShowDialog();
             BeginInvoke(new Test_label(Test_Text_label), new object[] { label7, "任务数量：" + TaskListClass.taskList.Count });
+
         }
 
         private void toolStripMenuItem2_Click(object sender, EventArgs e)
         {
-            ParameterList.parameters = parameterslist;
+            ParameterList.Parameters = parameterslist;
             Form2 form2 = new Form2(2);
             form2.ShowDialog();
-        }
+        } 
     }
 }

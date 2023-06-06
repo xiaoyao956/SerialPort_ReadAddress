@@ -64,6 +64,6 @@ namespace SerialPort_ReadAddress
 
     public class ParameterList
     {
-        public static List<Parameter> parameters { get; set; }
+        public static List<Parameter> Parameters { get; set; }
     }
 }

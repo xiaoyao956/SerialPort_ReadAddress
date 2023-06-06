@@ -130,23 +130,23 @@ namespace SerialPort_ReadAddress
             else if (ID == 2)
             {
                 int listcount = 0;
-                if (ParameterList.parameters != null)
+                if (ParameterList.Parameters != null)
                 {
-                    listcount = ParameterList.parameters.Count;
+                    listcount = ParameterList.Parameters.Count;
                 }
                 BeginInvoke(new Test_dataGridView_Clear(Test_Clear_dataGridView), new object[] { dataGridView1 });
-                BeginInvoke(new Test_dataGridView_ParameterList(Test_Text_dataGridView_ParameterList), new object[] { dataGridView1, ParameterList.parameters });
+                BeginInvoke(new Test_dataGridView_ParameterList(Test_Text_dataGridView_ParameterList), new object[] { dataGridView1, ParameterList.Parameters });
 
                 //异步刷新任务列表
                 Task.Run(() =>
                 {
                     while (notClose)
                     {
-                        if (ParameterList.parameters != null && listcount != ParameterList.parameters.Count && notClose)
+                        if (ParameterList.Parameters != null && listcount != ParameterList.Parameters.Count && notClose)
                         {
-                            listcount = ParameterList.parameters.Count;
+                            listcount = ParameterList.Parameters.Count;
                             BeginInvoke(new Test_dataGridView_Clear(Test_Clear_dataGridView), new object[] { dataGridView1 });
-                            BeginInvoke(new Test_dataGridView_ParameterList(Test_Text_dataGridView_ParameterList), new object[] { dataGridView1, ParameterList.parameters });
+                            BeginInvoke(new Test_dataGridView_ParameterList(Test_Text_dataGridView_ParameterList), new object[] { dataGridView1, ParameterList.Parameters });
                         }
                     }
                 });
