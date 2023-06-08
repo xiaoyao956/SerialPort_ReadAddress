@@ -13,7 +13,8 @@ namespace HexAll
     {
         static SerialPort sp;
         static List<SerialPort> ports = new List<SerialPort>();
-        private static readonly object thisLock = new object();
+        private static readonly object thisLock
+            = new object();
 
         public static byte[] Port_Byte(byte[] byteBuffer, string PortName, string BaudRate, string Parity, string DataBits, string StopBits)
         {

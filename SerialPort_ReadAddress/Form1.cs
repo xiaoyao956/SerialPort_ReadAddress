@@ -107,13 +107,15 @@ namespace SerialPort_ReadAddress
             string PortName = Text_PortName.Text;
 
             //多任务添加
-            TaskList tasklist = new TaskList();
-            tasklist.BaudRate = BaudRate;
-            tasklist.Parity = Parity;
-            tasklist.DataBits = DataBits;
-            tasklist.StopBits = StopBits;
-            tasklist.PortName = PortName;
-            tasklist.text = text;
+            TaskList tasklist = new TaskList
+            {
+                BaudRate = BaudRate,
+                Parity = Parity,
+                DataBits = DataBits,
+                StopBits = StopBits,
+                PortName = PortName,
+                text = text
+            };
             taskLists.Add(tasklist);
             //任务列表静态保存
             TaskListClass.taskList = taskLists;
